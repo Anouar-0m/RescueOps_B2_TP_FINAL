@@ -1,9 +1,9 @@
 # Rapport d'audit — RescueOps
 
-Auteur :
-Pseudo GitHub :
-Date :
-Commit de base :
+Auteur : Anouar Omari 
+Pseudo GitHub : Anouar-0m
+Date : 09/11/2026
+Commit de base : 5e99359aa7cb8ad6a79a67a02373300e8b5a6873
 
 | ID | Règle RO | Fichier / fonction | Entrée, obtenu S0, attendu | Risque concret | Priorité P0/P1/P2 | Preuve du correctif (test / commit) |
 |---|---|---|---|---|---|---|
