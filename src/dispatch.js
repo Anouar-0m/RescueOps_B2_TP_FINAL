@@ -14,7 +14,8 @@ export function deployDrone(drone, mission) {
     throw new Error('Mission not planned');
   }
   const energyUsed = estimateEnergy(mission.distanceKm, mission.payloadKg);
-  if (drone.batteryPoints - energyUsed < MIN_RESERVE_POINTS) {
+  // Garde "fail-closed" : une batterie non numérique (NaN) est refusée aussi.
+  if (!(drone.batteryPoints - energyUsed >= MIN_RESERVE_POINTS)) {
     throw new RangeError('Insufficient battery reserve');
   }
   return {

@@ -72,3 +72,15 @@ test('T15 - un départ accepté crée de nouveaux objets (RO-05)', () => {
   assert.equal(m.droneId, undefined);
   assert.deepEqual(m.history, ['planned']);
 });
+
+test('T23 - batterie non numérique refusée, la garde ne s\'ouvre pas sur NaN (RO-04, revue R-01)', () => {
+  for (const battery of [NaN, undefined, 'abc']) {
+    const d = { ...drone(), batteryPoints: battery };
+    const m = mission();
+    const dBefore = structuredClone(d);
+    const mBefore = structuredClone(m);
+    assert.throws(() => deployDrone(d, m), RangeError, `batterie ${String(battery)}`);
+    assert.deepEqual(d, dBefore, `batterie ${String(battery)} : drone intact`);
+    assert.deepEqual(m, mBefore, `batterie ${String(battery)} : mission intacte`);
+  }
+});
