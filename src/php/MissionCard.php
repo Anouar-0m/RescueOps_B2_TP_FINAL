@@ -17,8 +17,6 @@ final class MissionCard
         return [
             'id' => $mission['id'],
             'statusLabel' => self::LABELS[$mission['status']],
-            'contactEmail' => $mission['contactEmail'],
-            'gps' => $mission['gps'],
         ];
     }
 }
