@@ -25,7 +25,7 @@ Détail, entrées, sorties avant correction et raison des priorités : `docs/RAP
 - `src/mission.js` / `advanceMission` : table de transitions autorisées uniquement ; `Error` sinon. `cancelMission` : autorisée seulement depuis `planned`.
 - `src/public.js` / `getPublicStatus` : retourne seulement `id`, `status` et une copie de `history`.
 - `src/php/MissionCard.php` / `publicCard` : suppression de `contactEmail` et `gps` ; libellés conservés.
-- Tests ajoutés dans les fichiers existants : T09 à T23 (JS) et P04 à P13 (PHP). Les signatures des fonctions et les tests T01 à T08 sont conservés.
+- Tests ajoutés dans les fichiers existants : T09 à T23 (JS) et P04 à P08 (PHP, 13 vérifications au total). Les signatures des fonctions et les tests T01 à T08 sont conservés.
 
 ## Tests réellement exécutés : commandes et résultats
 
@@ -34,7 +34,7 @@ Sur mon poste (Windows, PowerShell), dépôt `RescueOps_B2_TP_FINAL` :
 - Avant correctifs (code S0, nouveaux tests présents) : `npm test` donne 22 tests, 11 réussis, 11 en échec (T09, T10, T12, T13, T14, T17, T18, T19, T20, T21, T22). `npm run demo` affiche « ACCEPTÉ : réserve après départ = 4 (risque métier) ».
 - Après correctifs : `npm test` donne 22 tests, 22 réussis, 0 échec. `npm run demo` affiche « REFUSÉ : Insufficient battery reserve ».
 - Après revue (R-01) : T23 observé rouge (1 échec) puis vert ; `npm test` final : 23 tests, 23 réussis, 0 échec.
-- **Non exécutés** : `php tests/MissionCard.test.php` et `php -l src/php/MissionCard.php` (PHP CLI absent de mon poste).
+- PHP 8.4.27 : `php tests/MissionCard.test.php` donne 13 vérifications conformes ; `php -l src/php/MissionCard.php` donne « No syntax errors detected ». Avec le fichier `MissionCard.php` du commit S0 restauré temporairement, le test échoue sur P04 (clés `id`, `statusLabel`, `contactEmail`, `gps`) ; ce rouge a été observé après les correctifs, PHP n'étant pas encore installé.
 
 ## Non-régression / objets non mutés
 
@@ -42,15 +42,15 @@ T01 à T08 (scénarios d'origine) sont verts avant et après. T04, T14, T15, T16
 
 ## Risques résiduels et dette D-01
 
-- D-01 : pas d'intégration continue ; PHP non exécuté sur mon poste (détail dans le rapport). À rejouer avec PHP CLI 8 ou plus avant merge.
+- D-01 : pas d'intégration continue, les tests Node et PHP sont lancés à la main (détail dans le rapport).
 - `createMission` et `createDrone` ne valident pas leurs entrées : hors contrat (supposées bien formées). La garde de batterie reste néanmoins sûre face à `NaN` (T23).
-- `MissionCard::publicCard` avec un statut inconnu produit un avertissement PHP et un libellé nul : comportement non défini par le contrat, laissé inchangé (revue R-02).
+- `MissionCard::publicCard` avec un statut inconnu produit un avertissement PHP et un libellé nul (observé avec PHP 8.4.27) : comportement non défini par le contrat, laissé inchangé (revue R-02).
 
 ## Points précis à relire
 
 - `src/dispatch.js`, garde de réserve : `!(drone.batteryPoints - energyUsed >= MIN_RESERVE_POINTS)`.
 - `src/mission.js`, `Object.hasOwn(NEXT_STATUS, mission.status)` qui évite les clés héritées comme `constructor`.
-- `src/php/MissionCard.php` : suppression de `contactEmail` et `gps`, à rejouer avec PHP.
+- `src/php/MissionCard.php` : suppression de `contactEmail` et `gps` (vérifiée par P04 à P08).
 - `tests/mission.test.js`, fonction `missionAt` qui construit chaque état par le parcours officiel.
 
 ## Modifications faites après revue (dans cette même PR)
